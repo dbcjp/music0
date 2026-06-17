@@ -1,4 +1,3 @@
-<script>
 document.write(`
 <div id="gamenA">
 <div id="listA"></div>
@@ -470,4 +469,3 @@ button.onclick = () => {
   gamen.insertAdjacentHTML('beforeend','Finished');
 };
 */
-</script>
