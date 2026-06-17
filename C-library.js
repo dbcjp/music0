@@ -269,7 +269,7 @@ function showParts(catalog){
   listA.innerHTML=`
   <h2>${catalog} ${title}</h2>
   `+html;
-  shouBdata(html);
+  showBdata(html);
 }
 
 function getMovement(catalog, num){
