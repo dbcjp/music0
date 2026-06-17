@@ -1,3 +1,6 @@
+body{
+    background:red;
+}
 #gamenA{
   height:100dvh;
   display:flex;
