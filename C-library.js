@@ -148,7 +148,7 @@ function setIndex(){
     });
 }
 
-//buildData()
+//buildData();
 //setIndex();
 //current=[...db];
 //choices();
