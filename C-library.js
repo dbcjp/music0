@@ -149,9 +149,9 @@ function setIndex(){
 }
 
 //buildData()
-setIndex();
-current=[...db];
-choices();
+//setIndex();
+//current=[...db];
+//choices();
 
 
 //gamenA.innerHTML="<pre>" +db.map(v => format(v)).join("\n\n") +"</pre>";
