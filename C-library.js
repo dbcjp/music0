@@ -1,3 +1,5 @@
+loadCss();
+
 document.write(`
 <div id="gamenA">
 <div id="listA"></div>
@@ -5,19 +7,43 @@ document.write(`
 </div>
 <div id="gamenB"></div>
 `);
-var data_a=[],data_b=[],data_c=[],data_m=[],data_t=[],data_c2=[];
 
 //=================================
 
+var data_a=[],data_b=[],data_c=[],data_m=[],data_t=[],data_c2=[];
 var gamenA=document.getElementById('gamenA');
 var gamenB=document.getElementById('gamenB');
 var listA=document.getElementById('listA');
 var menuA=document.getElementById('menuA');
-
 var urlA=[],nameB=[],nameC=[],nameC2=[];
 var k=0,htmlindexP="",htmlindexC="",htmlindexT="";
-var p_width=0;
+var p_width=1;
 var db=[],current=[],k2=0,k2max=0;
+
+//loadData("https://dbcjp.github.io/music0/bach/violinsolo.js");
+
+function loadCss(){
+    const css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "https://dbcjp.github.io/music0/C-library.css";
+    document.head.appendChild(css);
+}
+function initData() {
+    data_a = []; data_b = []; data_c = []; data_c2 = []; data_t = [];
+    urlA = []; nameB = []; nameC = []; nameC2 = [];
+    db = []; current = [];
+    k = 0; k2 = 0; k2max = 0;
+}
+
+function loadData(url){
+    initData();
+    let script = document.createElement("script");
+    script.src = url;
+    script.onload = function () {
+        buildData();
+    };
+    document.body.appendChild(script);
+}
 
 function addData(url,title,name,sortname,time = []){
     data_a.push(url);
@@ -45,10 +71,6 @@ function buildData(){
         }
     }
     
-//url.forEach(item => item+',');
-//url.join(',');//上と同じ
-//nameB.join('/');
-
     for (var i=0;i<urlA.length;i++){
         if (nameB[i].startsWith('*')){
             if (i>0){
@@ -63,10 +85,8 @@ function buildData(){
             });
             }
             var parts=[];
-            //var catalog=normalizeCatalog(nameB[i].slice(nameB[i].indexOf('BWV '),nameB[i].indexOf('BWV ')+8));
             var catalog=normalizeCatalog(nameB[i].slice(nameB[i].indexOf(',@')+2));
             nameB[i]=nameB[i].slice(1);
-            //var nameTitle=nameB[i].slice(0,nameB[i].indexOf(',@BWV'));
             var nameTitle=nameB[i].slice(0,nameB[i].indexOf(':'));
             var nameSubtitle='Shéhérazade';
             var performer=nameC[i];
@@ -110,7 +130,11 @@ function buildData(){
         sortperformer:performer2,
         search:search
     });
+    current=[...db];
+    setIndex();
+    choices();
 }
+
 //検索用データベース
 function setIndex(){
     let indexCatalog =[...new Set(db.map(v => v.catalog))];
@@ -147,13 +171,6 @@ function setIndex(){
     });
 }
 
-//buildData();
-//setIndex();
-//current=[...db];
-//choices();
-
-
-//gamenA.innerHTML="<pre>" +db.map(v => format(v)).join("\n\n") +"</pre>";
 
 function choices(){
   let html=`
@@ -165,15 +182,6 @@ function choices(){
   menuA.innerHTML=html;
 }
 
-/*
-    <button class="choice" onclick="sortA()">番順</button>
-    <button class="choice" onclick="sortB()">番逆</button>
-    <button class="choice" onclick="abc('title')">曲順</button>
-    <button class="choice" onclick="abc('performer')">奏順</button>
-    <button class="choice" onclick="chooseData('BWV1006')">BWV1006</button>
-    <button class="choice" onclick="getMovement('BWV1006',2)">BWV1006gavott</button>
-*/
-
 function showData(){
   let html="";
   current.forEach((work, n) =>{
@@ -181,8 +189,6 @@ function showData(){
     <div>${n+1} <button onclick="tosideB('${n}')">${work.title}${work.performer}</button></div>
     `;
   });
-  //<div>${n+1} ${work.catalog} ${work.title} / <button onclick="tosideB('${n}')">${work.performer}</button></div>
-  //listA.innerHTML='<h2>'+db[0].performer+'</h2>'+html+`
   listA.innerHTML=`
   <h5><button onclick="showParts('${current[0].catalog}')">${current[0].catalog} ${current[0].title}</button></h5>
   `+html;
@@ -213,47 +219,8 @@ function showIndex(data,data2){
     }
 
     listA.innerHTML=html;
-    //listA.innerHTML=html;
-    //showData();
 }
 
-function sortA(){
-    //current=current.sort((a,b)=>a.catalog-b.catalog);
-    current=[...db].sort((a,b)=>
-      a.catalog.localeCompare(b.catalog,undefined,{numeric:true}));
-    showData();
-}
-
-function sortB(){
-    //current=[...db].sort((a,b)=>b.catalog-a.catalog);
-    current=[...db].sort((a,b)=>
-      b.catalog.localeCompare(a.catalog,undefined,{numeric:true}));
-      //文字列で比較
-    showData();
-}
-
-function chooseTitle(){
-    current=[...db]
-        .filter(v =>
-          v.catalog == catalog &&
-          v.parts[num]
-        )
-        .map(v => ({
-          catalog:v.catalog,
-          title:v.title,
-          performer:v.performer,
-          soortperformer:v.sortperformer,
-          movement:num+1,
-          parts:[v.parts[num]]
-        }));
-    showData();
-}
-
-function chooseData(data){
-    //gamenA.innerHTML="OK";
-    current=[...db].filter(v =>v.catalog == data);
-    showData();
-}
 
 function showParts(catalog){
   title=db.find(v => v.catalog === catalog )?.title;
@@ -269,7 +236,6 @@ function showParts(catalog){
   listA.innerHTML=`
   <h2>${catalog} ${title}</h2>
   `+html;
-  showBdata(html);
 }
 
 function getMovement(catalog, num){
@@ -332,17 +298,6 @@ function getMovement(catalog, num){
     let elm=document.getElementById('player');
     (p_width==0)? elm.style.width="100%" : elm.style.width="50%";
     
-}
-
-function abc(data){
-    if (data=="title"){
-        current=[...db].sort((a,b)=>
-          a.title.localeCompare(b.title,undefined,{numeric:true}));//文字も数字も比較
-    }else if (data=="performer"){
-        current=[...db].sort((a,b)=>
-          a.performer.localeCompare(b.performer,undefined,{numeric:true}));
-    }
-    showData();
 }
 
 function normalizeCatalog(str){
@@ -427,45 +382,3 @@ function goplay(data){
   document.getElementById("player").src =
     `https://www.youtube.com/embed?playlist=${data}&autoplay=1`;
 }
-
-
-
-//↓ここから追加 
-function format(obj){
-
-  let txt = `{
-  "catalog":"${obj.catalog}",
-  "title":"${obj.title}",
-  "parts":[
-`;
-  txt += obj.parts.map(p =>
-    "    " + JSON.stringify(p)
-  ).join(",\n");
-  txt += `
-  ],
-  "performer":"${obj.performer}"
-  "search":"${obj.search}"
-}`;
-  return txt;
-}
-/*
-
-//JSONファイル形式にしてパソコンのダウンロードに入れるプログラム
-const json = JSON.stringify(db, null, 2);
-gamen.innerHTML = "<pre>" + json + "</pre>";
-gamen.insertAdjacentHTML('beforeend','<button id="btn">DATA UP</button>');
-
-button=document.getElementById('btn');
-button.onclick = () => {
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "bach.json";
-  a.click();
-  
-  URL.revokeObjectURL(url);
-  gamen.insertAdjacentHTML('beforeend','Finished');
-};
-*/
