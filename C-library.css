@@ -7,7 +7,7 @@
 #listA{
   height:60vh;
   border-radius:5px;
-  border: steelblue solid 8px;
+  border: darkolivegreen solid 8px;
   flex:1;
   overflow-y:auto;
   padding:10px;
