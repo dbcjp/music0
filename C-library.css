@@ -7,7 +7,7 @@
 #listA{
   height:60vh;
   border-radius:5px;
-  border: darkgoldenrod solid 8px;
+  border: peru solid 8px;
   flex:1;
   overflow-y:auto;
   padding:10px;
@@ -17,7 +17,7 @@
 #menuA{
   /*height: 20vh ;*/
   border-radius:5px;
-  border: darkgoldenrod solid 8px;
+  border: peru solid 8px;
   overflow-y:auto;
   /*position:sticky;
   bottom:0;
